@@ -1,6 +1,6 @@
 import { Task, TaskStatus } from './tasks.model';
 import { Injectable } from '@nestjs/common';
-import * as uuid from 'uuid';
+import { v1 as uuid } from 'uuid';
 
 @Injectable()
 export class TasksService {

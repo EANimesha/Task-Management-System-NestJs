@@ -1,3 +1,4 @@
+import { GetTasksFilterDto } from './dto/get-tasks-filter-dto';
 import { CreateTaskDto } from './dto/create-task-dto';
 import { Task, TaskStatus } from './tasks.model';
 import { Injectable } from '@nestjs/common';
@@ -5,35 +6,51 @@ import { v1 as uuid } from 'uuid';
 
 @Injectable()
 export class TasksService {
-    private tasks: Task[]=[];
+  private tasks: Task[] = [];
 
-    getAllTasks(){
-        return this.tasks;
+  getAllTasks() {
+    return this.tasks;
+  }
+
+  getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
+    const { status, search } = filterDto;
+    let tasks = this.getAllTasks();
+    if (status) {
+      tasks = tasks.filter(task => task.status === status);
+    }
+    if (search) {
+      tasks = tasks.filter(
+        task =>
+          task.title.includes(search) || task.description.includes(search),
+      );
     }
 
-    getTaskById(id:string):Task{
-        return this.tasks.find(task=>task.id===id);
-    }
+    return tasks;
+  }
 
-    createTask(createTaskDto:CreateTaskDto){
-        const {title,description}=createTaskDto;
-        const task:Task={
-            id:uuid(),
-            title,
-            description,
-            status:TaskStatus.OPEN
-        }
-        this.tasks.push(task);
-        return task;
-    }
+  getTaskById(id: string): Task {
+    return this.tasks.find(task => task.id === id);
+  }
 
-    deleteTask(id:string):void{
-        this.tasks= this.tasks.filter(task=>task.id!==id)
-    }
+  createTask(createTaskDto: CreateTaskDto) {
+    const { title, description } = createTaskDto;
+    const task: Task = {
+      id: uuid(),
+      title,
+      description,
+      status: TaskStatus.OPEN,
+    };
+    this.tasks.push(task);
+    return task;
+  }
 
-    updateTask(id:string,status:TaskStatus){
-        const task=this.getTaskById(id);
-        task.status=status;
-        return task;
-    }
+  deleteTask(id: string): void {
+    this.tasks = this.tasks.filter(task => task.id !== id);
+  }
+
+  updateTask(id: string, status: TaskStatus) {
+    const task = this.getTaskById(id);
+    task.status = status;
+    return task;
+  }
 }

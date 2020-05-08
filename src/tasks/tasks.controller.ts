@@ -4,6 +4,7 @@ import { CreateTaskDto } from './dto/create-task-dto';
 import { TasksService } from './tasks.service';
 import { Controller, Get, Post, Body, Param, Delete, Patch, Query, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { Task } from './task.entity';
+import { TaskStatus } from './task-status.enum';
 
 @Controller('tasks')
 export class TasksController {
@@ -34,11 +35,11 @@ export class TasksController {
       return this.taskService.deleteTask(id);
   }
 
-  // @Patch('/:id/status')
-  // updateTask(
-  //     @Param('id') id:string,
-  //     @Body('status',TaskStatusValidationPipe) status:TaskStatus
-  //     ):Task{
-  //     return this.taskService.updateTask(id,status);
-  // }
+  @Patch('/:id/status')
+  updateTask(
+    @Param('id',ParseIntPipe) id:number,
+      @Body('status',TaskStatusValidationPipe) status:TaskStatus
+      ):Promise<Task>{
+      return this.taskService.updateTask(id,status);
+  }
 }

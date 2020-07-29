@@ -43,11 +43,12 @@ export class TasksController {
       return this.taskService.deleteTask(id);
   }
 
-  // @Patch('/:id/status')
-  // updateTask(
-  //   @Param('id',ParseIntPipe) id:number,
-  //     @Body('status',TaskStatusValidationPipe) status:TaskStatus
-  //     ):Promise<Task>{
-  //     return this.taskService.updateTask(id,status);
-  // }
+  @Patch('/:id/status')
+  updateTask(
+    @Param('id',ParseIntPipe) id:number,
+      @Body('status',TaskStatusValidationPipe) status:TaskStatus,
+      @GetUser() user:User
+      ):Promise<Task>{
+      return this.taskService.updateTask(id,status,user);
+  }
 }
